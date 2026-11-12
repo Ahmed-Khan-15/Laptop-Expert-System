@@ -82,7 +82,10 @@ if page == "Symptom Checker":
     for category in CATEGORIES:
         category_symptoms = [symptom for symptom in SYMPTOMS if SYMPTOMS[symptom][0] == category]
         category_selected = sum(bool(st.session_state.get(symptom, False)) for symptom in category_symptoms)
-        with st.expander(category + "  ·  " + str(category_selected) + " selected"):
+        # Keep the expander label stable: changing it on each checkbox rerun
+        # makes Streamlit treat it as a different expander and close it.
+        with st.expander(category):
+            st.caption(str(category_selected) + " selected")
             for symptom in SYMPTOMS:
                 if SYMPTOMS[symptom][0] == category:
                     if st.checkbox(SYMPTOMS[symptom][1], key=symptom):
